@@ -1,0 +1,20 @@
+hp <- read.csv("household_power_consumption.txt", header = TRUE, sep = ";", quote = "", na.strings = "?")
+hp$Date <- as.Date(hp$Date, format = "%d/%m/%Y")
+hpTemp <- subset(hp, (hp$Date == "2007-02-01" | hp$Date == "2007-02-02"))
+hp <- hpTemp
+hp$DateTime <- paste(hp$Date, hp$Time, sep = " ")
+hp$DateTime <- as.POSIXct(hp$DateTime)
+
+png('plot4.png',width=480,height=480)
+par(mfcol=c(2,2),  mar=c(4,5,2,2))
+plot(x = hp$DateTime, y = hp$Global_active_power, type = "l", xlab = "", ylab = "Global Active Power")
+plot(x = hp$DateTime, y = hp$Sub_metering_1, type = "l", xlab = "", ylab = "Energy sub metering", col = "black")
+par(new=TRUE)
+lines(x = hp$DateTime, y = hp$Sub_metering_2, col = "red")
+par(new=TRUE)
+lines(x = hp$DateTime, y = hp$Sub_metering_3, col = "blue")
+legend("topright", col = c("black", "red", "blue"), legend = c("Sub_metering_1","Sub_metering_2","Sub_metering_3"), bty = "n", lty = c(1,1,1))
+plot(x = hp$DateTime, y = hp$Voltage, type = "l", xlab = "datetime", ylab = "Voltage", col = "black")
+plot(x = hp$DateTime, y = hp$Global_reactive_power, type = "l", xlab = "datetime", ylab = "Global_reactive_power", col = "black")
+
+dev.off()
